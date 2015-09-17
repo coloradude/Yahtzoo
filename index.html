@@ -1,0 +1,173 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <link href="style.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="app.js" type='text/javascript'></script>
+  </head>
+  <body>
+    <div class="gameboard col-md-7">
+      <div class="logo"><img class='yahtzoo-logo' src="./images/yahtzee-logo.png"/></div>
+      <div class="button-wrapper">
+        <div class='flex-row'>
+          <div class="button multiples ones">
+            <span class="button-text">Ones</span>
+          </div>
+          <div class="button multiples twos">
+            <span class="button-text threes">Twos</span>
+          </div>
+          <div class="button multiples threes">
+            <span class="button-text">Threes</span>
+          </div>
+          <div class="button multiples fours">
+            <span class="button-text">Fours</span>
+          </div>
+          <div class="button multiples fives">
+            <span class="button-text">Fives</span>
+          </div>
+          <div class="button multiples sixes">
+            <span class="button-text">Sixes</span>
+          </div>
+        </div>
+        <div class='flex-row'>
+          <div class="button three-of-a-kind">
+            <span class="button-text">3 of Kind</span>
+          </div>
+          <div class="button four-of-a-kind">
+            <span class="button-text">4 of Kind</span>
+          </div>
+          <div class="button full-house">
+            <span class="button-text">Full House</span>
+          </div>
+          <div class="button sm-straight">
+            <span class="button-text">Small Straight</span>
+          </div>
+          <div class="button lg-straight">
+            <span class="button-text">Large Straight</span>
+          </div>
+          <div class="button chance">
+            <span class="button-text">Chance</span>
+          </div>
+        </div>
+        <div class='flex-row'>
+          <div class="button yahtzoo">
+            <span class="button-text">Yahtzoo!</span>
+          </div>
+        </div>
+        <div class="die-wrapper">
+          <div class="row die-row">
+            <div class="die one"></div>
+            <div class="die two"></div>
+            <div class="die three"></div>
+            <div class="die four"></div>
+            <div class="die five"></div>
+          </div>
+        </div>
+        <div class="big-button-container">
+          <button class="big-button">Roll (<span>3</span>)</button>
+        </div>
+      </div>
+    </div>
+    <div class="scorecard col-md-5">
+      <h2 class='scorecard-header'>Score Card</h2>
+      <table>
+        <tr>
+          <th>Upper Section</th>
+          <th>How to score</th>
+          <th>Player 1</th>
+          <th>Player 2</th>
+        </tr>
+        <tr>
+          <td>Ones</td>
+          <td>Add only ones</td>
+          <td class='1-p1'> </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Twos</td>
+          <td>Add only twos</td>
+          <td class='2-p1'> </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Threes</td>
+          <td>Add only threes</td>
+          <td class='3-p1'> </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Fours</td>
+          <td>Add only fours</td>
+          <td class='4-p1'> </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Fives</td>
+          <td>Add only fives</td>
+          <td class='5-p1'> </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Sixes</td>
+          <td>Add only sixes</td>
+          <td class='6-p1'> </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Bonus? </td>
+          <td>(+35)</td>
+          <td class='bonus-p1'></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>3 of a Kind</td>
+          <td>Total of All Dice</td>
+          <td class='3-of-a-kind-p1'> </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>4 of a Kind</td>
+          <td>Total of All Dice</td>
+          <td class='4-of-a-kind-p1'> </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Full House</td>
+          <td>+25</td>
+          <td class='full-house-p1'></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Sm. Straight</td>
+          <td>+40</td>
+          <td class='sm-straight-p1'> </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Lg. Straight</td>
+          <td>+50</td>
+          <td class='lg-straight-p1'></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Chance</td>
+          <td>Total of All Dice</td>
+          <td class='chance-p1'></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Yahtzoo</td>
+          <td>Total of All Dice</td>
+          <td class='yahtzoo-p1'></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Total Score</td>
+          <td>-----------</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

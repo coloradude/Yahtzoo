@@ -1,0 +1,152 @@
+html
+  head
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
+    link(href='style.css', rel='stylesheet')
+    script(src='app.js')
+  body
+    .gameboard.col-md-7
+      .logo
+        img(src='./images/yahtzee-logo.png')
+      .button-wrapper
+        div
+          .button.ones
+            p.button-text Ones
+          .button.two
+            p.button-text Twos
+          .button.threes
+            p.button-text Threes
+          .button.fours
+            p.button-text Fours
+          .button.fives
+            p.button-text Fives
+          .button.sixes
+            p.button-text Sixes
+        div
+          .button.three-of-a-kind
+            p.button-text 3 of Kind
+          .button.four-of-a-kind
+            p.button-text 4 of Kind
+          .button.full-house
+            p.button-text Full House
+          .button.sm-straight
+            p.button-text Small Straight
+          .button.lg-straight
+            p.button-text Large Straight
+          .button.chance
+            p.button-text Chance
+        div
+          .yahtzoo
+            p.button-text Yahtzoo!
+        .die-wrapper
+          .row.die-row
+            .die.one
+            .die.two
+            .die.three
+            .die.four
+            .die.five
+          .row.die-row
+            .die.one
+            .die.two
+            .die.three
+            .die.four
+            .die.five
+        .big-button-container
+          button.big-button Roll(3)
+    .scorecard.col-md-5
+      h2 Score Card
+      table
+        tr
+          th Upper Section
+          th How to score
+          th Player 1
+          th Player 2
+        tr
+          td Ones
+          td Add only ones
+          td  
+          td
+        tr
+          td Twos
+          td Add only twos
+          td  
+          td
+        tr
+          td Threes
+          td Add only threes
+          td  
+          td
+        tr
+          td Fours
+          td Add only fours
+          td  
+          td
+        tr
+          td Fives
+          td Add only fives
+          td  
+          td
+        tr
+          td Sixes
+          td Add only sixes
+          td  
+          td
+        tr
+          td Bonus? 
+          td (+35)
+          td  
+          td
+        tr
+          td 3 of a Kind
+          td Total of All Dice
+          td  
+          td
+        tr
+          td 4 of a Kind
+          td Total of All Dice
+          td  
+          td
+        tr
+          td Full House
+          td +25
+          td  
+          td
+        tr
+          td Sm. Straight
+          td +40
+          td  
+          td
+        tr
+          td Lg. Straight
+          td +50
+          td  
+          td
+        tr
+          td Chance
+          td Total of All Dice
+          td  
+          td
+        tr
+          td Yahtzoo
+          td Total of All Dice
+          td  
+          td
+        tr
+          td Lg. Straight
+          td +50
+          td  
+          td
+        tr
+          td Chance
+          td Total of All Dice
+          td  
+          td
+        tr
+          td Yahtzoo
+          td Total of All Dice
+          td  
+          td
+        tr
+          td Total Score
+          td -----------
+          td
+          td
