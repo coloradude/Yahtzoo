@@ -1,5 +1,6 @@
 var turnCount = 0;
 var diceRemoved = 0;
+var currentPlayer;
 
 var player1 = {
   name : 'player 1',
@@ -170,10 +171,12 @@ function rollTheDice(numOfDice){
 
 //this function returns the quantity of duplicates of a given number not the point value associates with it
 function hasDuplicates(roll, num){
-  if (roll.indexOf(num) > -1){
-    return roll.reduce(function(curr, next){
-      return next == num ? curr + 1 : curr;
-    }, 0) * num;
+  if (roll){
+    if (roll.indexOf(num) > -1){
+      return roll.reduce(function(curr, next){
+        return next == num ? curr + 1 : curr;
+      }, 0) * num;
+    }
   }
 }
 
@@ -223,7 +226,7 @@ function hasYahtzoo(roll){
   if (Object.getOwnPropertyNames(roll.reduce(function(obj, val){
     obj[val] = obj[val] + 1 || 1;
     return obj;
-  }, {})).length == 1){
+  }, {})).length == 1 && roll[0] > 0){
     return 50;
   }
 }
@@ -294,6 +297,7 @@ function convertToValues(player){
 function updateScoringOptions(currentRoll, currentPlayer){
 
   var num = currentPlayer == player1 ? '1' : '2';
+  console.log(currentPlayer)
   updatePoints(hasDuplicates(currentRoll, 1), currentPlayer, '.ones', ' (' + hasDuplicates(currentRoll, 1) + ')', '.1-p'+num, currentPlayer.scores.ones);
   updatePoints(hasDuplicates(currentRoll, 2), currentPlayer, '.twos', ' (' + hasDuplicates(currentRoll, 2) + ')', '.2-p'+num, currentPlayer.scores.twos);
   updatePoints(hasDuplicates(currentRoll, 3), currentPlayer, '.threes', ' (' + hasDuplicates(currentRoll, 3) + ')', '.3-p'+num, currentPlayer.scores.threes);
@@ -317,6 +321,9 @@ function updatePoints(hasScore, player, btnClass, buttonText, tableClass, player
       playerScoreObj.isActive = false;
       playerScoreObj.value = hasScore;
       nextTurn();
+      $('.big-button').on('click', function(){
+        startTurn();
+      })
     });
   }
   else if (!playerScoreObj.isActive){
@@ -351,46 +358,76 @@ function nextTurn(){
   $('.die').html('');
   resetScoringOptions();
   turnCount++;
-  updateScoringOptions();
-  nextPlayer.status.rolls = 0;
+  updateScoringOptions([0,0,0,0], turnCount % 2 == 0 ? player1 : player2);
+
   console.log('next turn');
   activateDie(turnCount % 2 == 0 ? player1 : player2);
 }
 
 $(document).ready(function(){
-  var currentPlayer;
-  startTurn();
+  $('.big-button').on('click', function(){
+    startTurn();
+  })
   activateDie(player1)
 });
 
 function startTurn(){
-  $('.big-button').on('click', function(){
-    $('.button').removeClass('disabled-score');
+
+  $('.button').removeClass('disabled-score');
     currentPlayer = turnCount % 2 == 0 ? player1 : player2;
+    rollEm(currentPlayer);
+    updateScoringOptions(convertToValues(currentPlayer), currentPlayer);
     var $rollCount = $('.big-button>span');
     if (Number($rollCount.text()) > 1){
       $rollCount.text(Number($rollCount.text()) - 1);
     } 
-    else if (Number($rollCount.text()) === 1){
+    else if (Number($rollCount.text()) === 1) {
       $('.big-button').html('Take points or scratch');
       $('.die').off('click');
-      // $('.big-button').off('click');
-      // $('.button, .yahtzoo').not('active').on('click', function(){
-        
-      // })
+      $('.big-button').off('click');
+      setUpScratches(currentPlayer)
+      
     } 
-    else { 
-      nextTurn();
-    }
-    rollEm(currentPlayer);
+    // else { 
+    //   nextTurn();
+    // }
     currentPlayer.status.rolls++;
     $('.disabled').removeClass('disabled');
-    updateScoringOptions(convertToValues(currentPlayer), currentPlayer);
-  });
 }
 
+function setUpScratches(currentPlayer){
+  var num;
+  currentPlayer == player1 ? num = 1 : num = 2;
+  scratchableScores($('.ones'), currentPlayer.scores.ones, '.1-p' + num);
+  scratchableScores($('.twos'), currentPlayer.scores.twos, '.2-p' + num);
+  scratchableScores($('.threes'), currentPlayer.scores.threes, '.3-p' + num);
+  scratchableScores($('.fours'), currentPlayer.scores.fours, '.4-p' + num);
+  scratchableScores($('.fives'), currentPlayer.scores.fives, '.5-p' + num);
+  scratchableScores($('.sixes'), currentPlayer.scores.sixed, '.6-p' + num);
+  scratchableScores($('.three-of-a-kind'), currentPlayer.scores.threeOfAKind, '.three-of-a-kind-p' + num);
+  scratchableScores($('.four-of-a-kind'), currentPlayer.scores.fourOfAKind, '.four-of-a-kind-p' + num);  
+  scratchableScores($('.sm-straight'), currentPlayer.scores.smallStraight, '.sm-straight-p' + num);
+  scratchableScores($('.lg-straight'), currentPlayer.scores.largeStraight, '.lg-straight-p' + num);
+  scratchableScores($('.full-house'), currentPlayer.scores.fullHouse, '.full-house-p' + num);
+  scratchableScores($('.chance'), currentPlayer.scores.chance, '.chance-p' + num);
+  scratchableScores($('.yahtzoo'), currentPlayer.scores.ones, '.yahtzoo-p' + num);
+}
 
-
+function scratchableScores($button, playerScoreObj, tableClass){
+  console.log(!$button.hasClass('active'))
+  if (!$button.hasClass('active')){
+    $button.off('click')
+    $button.on('click', function(){
+      playerScoreObj.value = 0;
+      playerScoreObj.isActive = false;
+      $(tableClass).text('---');
+      nextTurn();
+      $('.big-button').on('click', function(){
+        startTurn();
+      })
+    })
+  }
+}
 
 
 
