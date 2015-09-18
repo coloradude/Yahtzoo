@@ -1,6 +1,73 @@
 var turnCount = 0;
+var diceRemoved = 0;
 
 var player1 = {
+  name : 'player 1',
+  scores: {  
+    ones: {
+      isActive: true,
+      value: 0
+    },
+    twos: {
+      isActive: true,
+      value: 0
+    },
+    threes: {
+      isActive: true,
+      value: 0
+    },
+    fours: {
+      isActive: true,
+      value: 0
+    },
+    fives: {
+      isActive: true,
+      value: 0
+    },
+    sixes: {
+      isActive: true,
+      value: 0
+    },
+    threeOfAKind: {
+      isActive: true,
+      value: 0
+    },
+    fourOfAKind: {
+      isActive: true,
+      value: 0
+    },
+    fullHouse: {
+      isActive: true,
+      value: 0
+    },
+    smallStraight: {
+      isActive: true,
+      value: 0
+    },
+    largeStraight: {
+      isActive: true,
+      value: 0
+    },
+    chance: {
+      isActive: true,
+      value: 0
+    },
+    yahtzoo: {
+      isActive: true,
+      value: 0
+    }
+  },
+  status: {
+    turns: 0,
+    rolls: 0,
+    numOfDice: 5,
+    inHand:[],
+    currentRoll: []
+  }
+}
+
+var player2 = {
+  name: 'player2',
   scores: {  
     ones: {
       isActive: true,
@@ -65,31 +132,6 @@ var player1 = {
   }
 }
 
-var player2 = {
-  score: {
-    ones: 0,
-    twos: 0,
-    threes: 0,
-    fours: 0,
-    fives: 0,
-    sixes: 0,
-    threeOfAKind: 0,
-    fourOfAKind: 0,
-    fullHouse: 0,
-    smallStraight: 0,
-    largeStraight: 0,
-    chance: 0,
-    yahtzoo: 0
-  },
-  status: {
-    turns: 0,
-    rolls: 3,
-    numOfDice: 5,
-    inHand: [],
-    currentRoll: []
-  }
-}
-
 var dice = {
   one: {
     image: '<img class="die-image" src="./images/dice-six-faces-one.svg">',
@@ -128,9 +170,11 @@ function rollTheDice(numOfDice){
 
 //this function returns the quantity of duplicates of a given number not the point value associates with it
 function hasDuplicates(roll, num){
-  return roll.reduce(function(curr, next){
-    return next == num ? curr + 1 : curr;
-  }, 0) * num;
+  if (roll.indexOf(num) > -1){
+    return roll.reduce(function(curr, next){
+      return next == num ? curr + 1 : curr;
+    }, 0) * num;
+  }
 }
 
 function has_OfAKind(roll, threeOrFour){
@@ -176,10 +220,12 @@ function hasStraight(roll, smOrLg){
 }
 
 function hasYahtzoo(roll){
-  return Object.getOwnPropertyNames(roll.reduce(function(obj, val){
+  if (Object.getOwnPropertyNames(roll.reduce(function(obj, val){
     obj[val] = obj[val] + 1 || 1;
     return obj;
-  }, {})).length == 1;
+  }, {})).length == 1){
+    return 50;
+  }
 }
 
 function takeChance(roll){
@@ -188,7 +234,7 @@ function takeChance(roll){
   })
 }
 
-function rollEm(){
+function rollEm(currentPlayer){
   $('.die').off('hover').removeClass('jquery-disabled');
   $('.die').not($('.disabled')).hover(
     function(){
@@ -199,33 +245,41 @@ function rollEm(){
     }
   )
   resetScoringOptions();
-  if (player1.status.rolls === 0 || !$('.die').hasClass('disabled')){
-    player1.status.inHand = [];
-    var currentRoll = rollTheDice(player1.status.numOfDice);
-    for (var i = 0; i<player1.status.numOfDice;i++){
+
+
+  if (currentPlayer.status.rolls === 0 || !$('.die').hasClass('disabled')){
+    currentPlayer.status.inHand = [];
+    var currentRoll = rollTheDice(currentPlayer.status.numOfDice);
+    for (var i = 0; i<currentPlayer.status.numOfDice;i++){
       $($('.die')[i]).html(currentRoll[i].image);
     }
-    player1.status.inHand = player1.status.inHand.concat(currentRoll);
+    currentPlayer.status.inHand = currentPlayer.status.inHand.concat(currentRoll);
+    //console.log(currentPlayer.status.inHand);
   } else {
-    var currentRoll = rollTheDice(player1.status.diceRemoved);
+    var currentRoll = rollTheDice(diceRemoved);
+    console.log(diceRemoved);
     for (var i=0; i<currentRoll.length;i++){
       $($('.disabled')[i]).html(currentRoll[i].image);
     }
     var j = 0;
     $('.die').each(function(){
+
       if ($(this).hasClass('disabled')){
         var atId = $(this).index();
-        player1.status.inHand.splice(atId, 1, currentRoll[j]);
+        currentPlayer.status.inHand.splice(atId, 1, currentRoll[j]);
+        console.log(currentRoll)
         j++;
       }
     })
   }
-  player1.status.diceRemoved = 0;
+  diceRemoved = 0;
 }
 
-function activateDie(){
+function activateDie(currentPlayer){
+  console.log(currentPlayer);
+  $('body').off('click', '.die-image');
   $('body').on('click', '.die-image', function(e){
-    $(this).parent().hasClass('disabled') ? player1.status.diceRemoved-- : player1.status.diceRemoved++;
+    $(this).parent().hasClass('disabled') ? diceRemoved-- : diceRemoved++;
     $(this).parent().toggleClass('disabled');
   });
 }
@@ -237,33 +291,36 @@ function convertToValues(player){
     }, []);
 }
 
-function updateScoringOptions(currentRoll){
- 
-  updatePoints(hasDuplicates(currentRoll, 1), player1, '.ones', ' (' + hasDuplicates(currentRoll, 1) + ')', '.1-p1', player1.scores.ones);
-  updatePoints(hasDuplicates(currentRoll, 2), player1, '.twos', ' (' + hasDuplicates(currentRoll, 2) + ')', '.2-p1', player1.scores.twos);
-  updatePoints(hasDuplicates(currentRoll, 3), player1, '.threes', ' (' + hasDuplicates(currentRoll, 3) + ')', '.3-p1', player1.scores.threes);
-  updatePoints(hasDuplicates(currentRoll, 4), player1, '.fours', ' (' + hasDuplicates(currentRoll, 4) + ')', '.4-p1', player1.scores.fours);
-  updatePoints(hasDuplicates(currentRoll, 5), player1, '.fives', ' (' + hasDuplicates(currentRoll, 5) + ')', '.5-p1', player1.scores.fives);
-  updatePoints(hasDuplicates(currentRoll, 6), player1, '.sixes', ' (' + hasDuplicates(currentRoll, 6) + ')', '.6-p1', player1.scores.sixes);
-  updatePoints(has_OfAKind(currentRoll, 3), player1, '.three-of-a-kind', ' (' + has_OfAKind(currentRoll, 3) + ')', '.3-of-a-kind-p1', player1.scores.threeOfAKind);
-  updatePoints(has_OfAKind(currentRoll, 4), player1, '.four-of-a-kind', ' (' + has_OfAKind(currentRoll, 4) + ')', '.4-of-a-kind-p1', player1.scores.fourOfAKind);
-  updatePoints(hasFullHouse(currentRoll), player1, '.full-house', ' (25)', '.full-house-p1', player1.scores.fullHouse);
-  updatePoints(hasStraight(currentRoll, 'small'), player1, '.sm-straight', ' (30)', '.sm-straight-p1', player1.scores.smallStraight);
-  updatePoints(hasStraight(currentRoll, 'large'), player1, '.lg-straight', ' (40)', '.lg-straight-p1', player1.scores.largeStraight);
-  updatePoints(takeChance(currentRoll), player1, '.chance', ' (' + takeChance(currentRoll) + ')', '.chance-p1', player1.scores.chance);
-  updatePoints(hasYahtzoo(currentRoll), player1, '.yahtzoo', ' (50)', '.yahtzoo-p1', player1.scores.yahtzoo);
+function updateScoringOptions(currentRoll, currentPlayer){
 
+  var num = currentPlayer == player1 ? '1' : '2';
+  updatePoints(hasDuplicates(currentRoll, 1), currentPlayer, '.ones', ' (' + hasDuplicates(currentRoll, 1) + ')', '.1-p'+num, currentPlayer.scores.ones);
+  updatePoints(hasDuplicates(currentRoll, 2), currentPlayer, '.twos', ' (' + hasDuplicates(currentRoll, 2) + ')', '.2-p'+num, currentPlayer.scores.twos);
+  updatePoints(hasDuplicates(currentRoll, 3), currentPlayer, '.threes', ' (' + hasDuplicates(currentRoll, 3) + ')', '.3-p'+num, currentPlayer.scores.threes);
+  updatePoints(hasDuplicates(currentRoll, 4), currentPlayer, '.fours', ' (' + hasDuplicates(currentRoll, 4) + ')', '.4-p'+num, currentPlayer.scores.fours);
+  updatePoints(hasDuplicates(currentRoll, 5), currentPlayer, '.fives', ' (' + hasDuplicates(currentRoll, 5) + ')', '.5-p'+num, currentPlayer.scores.fives);
+  updatePoints(hasDuplicates(currentRoll, 6), currentPlayer, '.sixes', ' (' + hasDuplicates(currentRoll, 6) + ')', '.6-p'+num, currentPlayer.scores.sixes);
+  updatePoints(has_OfAKind(currentRoll, 3), currentPlayer, '.three-of-a-kind', ' (' + has_OfAKind(currentRoll, 3) + ')', '.3-of-a-kind-p'+num, currentPlayer.scores.threeOfAKind);
+  updatePoints(has_OfAKind(currentRoll, 4), currentPlayer, '.four-of-a-kind', ' (' + has_OfAKind(currentRoll, 4) + ')', '.4-of-a-kind-p'+num, currentPlayer.scores.fourOfAKind);
+  updatePoints(hasFullHouse(currentRoll), currentPlayer, '.full-house', ' (25)', '.full-house-p'+num, currentPlayer.scores.fullHouse);
+  updatePoints(hasStraight(currentRoll, 'small'), currentPlayer, '.sm-straight', ' (30)', '.sm-straight-p'+num, currentPlayer.scores.smallStraight);
+  updatePoints(hasStraight(currentRoll, 'large'), currentPlayer, '.lg-straight', ' (40)', '.lg-straight-p'+num, currentPlayer.scores.largeStraight);
+  updatePoints(takeChance(currentRoll), currentPlayer, '.chance', ' (' + takeChance(currentRoll) + ')', '.chance-p'+num, currentPlayer.scores.chance);
+  updatePoints(hasYahtzoo(currentRoll), currentPlayer, '.yahtzoo', ' (50)', '.yahtzoo-p'+num, currentPlayer.scores.yahtzoo);
 }
 
 function updatePoints(hasScore, player, btnClass, buttonText, tableClass, playerScoreObj){
   if (hasScore && playerScoreObj.isActive){
-    $(btnClass).append(buttonText).attr('data', hasScore).addClass('active').on('click', function(){
+    $(btnClass).append(buttonText).attr('data', hasScore).removeClass('disabled-score').addClass('active').on('click', function(){
       $(this).addClass('disabled-score').removeClass('active');
       $(tableClass).text(hasScore);
       playerScoreObj.isActive = false;
-      playerScoreObj.value = 50;
+      playerScoreObj.value = hasScore;
       nextTurn();
     });
+  }
+  else if (!playerScoreObj.isActive){
+    $(btnClass).addClass('disabled-score').off('click');
   }
 }
 
@@ -288,38 +345,49 @@ function resetScoringOptions(){
 
 function nextTurn(){
   $('.big-button').html('Roll (<span>3</span>)');
+  //var prevPlayer = nextPlayer == player2 ? player1 : player2;
   player1.status.inHand = [];
   $('.die').removeClass('disabled');
   $('.die').html('');
   resetScoringOptions();
   turnCount++;
+  updateScoringOptions();
+  nextPlayer.status.rolls = 0;
+  console.log('next turn');
+  activateDie(turnCount % 2 == 0 ? player1 : player2);
 }
 
 $(document).ready(function(){
+  var currentPlayer;
+  startTurn();
+  activateDie(player1)
+});
 
+function startTurn(){
   $('.big-button').on('click', function(){
+    $('.button').removeClass('disabled-score');
+    currentPlayer = turnCount % 2 == 0 ? player1 : player2;
     var $rollCount = $('.big-button>span');
     if (Number($rollCount.text()) > 1){
       $rollCount.text(Number($rollCount.text()) - 1);
     } 
     else if (Number($rollCount.text()) === 1){
-      $('.big-button').html('Next turn');
+      $('.big-button').html('Take points or scratch');
       $('.die').off('click');
+      // $('.big-button').off('click');
+      // $('.button, .yahtzoo').not('active').on('click', function(){
+        
+      // })
     } 
     else { 
       nextTurn();
     }
-
-    rollEm();
-    console.log(player1.status.inHand)
-    player1.status.rolls++;
+    rollEm(currentPlayer);
+    currentPlayer.status.rolls++;
     $('.disabled').removeClass('disabled');
-    updateScoringOptions(convertToValues(player1));
+    updateScoringOptions(convertToValues(currentPlayer), currentPlayer);
   });
-  activateDie();
-});
-
-
+}
 
 
 
