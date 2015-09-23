@@ -123,7 +123,9 @@ button:hover, .button:hover, .yahtzoo:hover, .die-image:hover, div.big-button:ho
 }
 
 .scorecard-header {
+  margin-top: 50px;
   text-align: center;
+  font-size: 40px;
 }
 
 
@@ -181,7 +183,7 @@ table {
 .current-player {
   text-align: center;
   margin-top: 40px;
-  font-size: 75px;
+  font-size: 60px;
 }
 
 #overlay {
@@ -235,7 +237,7 @@ background-color: red;border-radius: 3px;border: 3px solid #fff;}
 
 .modal-header {
 
-}
+border-bottom: none;}
 
 .modal-title {
 
@@ -247,7 +249,7 @@ text-align: center;}
 
 .modal-footer {
 
-padding-top: 0px;text-align: center;}   
+padding-top: 0px;text-align: center;border-top: none;}   
 
 .btn-default {
 
@@ -263,7 +265,6 @@ border: 1px solid #595959;background-color: #595959;}
   color: #000;
 }
 .btn {
-  margin-top: 20px;
   border-radius: 3px;
 }
 
@@ -283,12 +284,25 @@ input {
 }
 
 .modal-body label {
-  padding-right: 10px;
+padding-right: 10px;}
+
+#leaderboard-submit input, #leaderboard-submit label {
+  display: block;
+  margin: 0px auto;
+  margin-top: 10px;
+  text-align: left;
+  max-width: 160px;
 }
 
+.form-wrapper {
+  width: 160px;
+  margin: 0px auto;
+}
 
-
-
+#game-over .textarea {
+  resize: none;
+  color: black;
+}
 
 
 
