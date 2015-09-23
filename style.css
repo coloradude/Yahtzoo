@@ -1,13 +1,9 @@
 .gameboard {
-/*  width: 60%;*/
   height: 200px;
-/*  float: left;
-*/}
+}
 
 .scorecard {
-/*  width: 40%;
-  float: left;*/
-/* padding: 0px; */}
+}
 
 body {
   background-color: red;
@@ -176,10 +172,130 @@ th {
 
 
 table {
+  display: block;
       -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
   border-radius: 5px;
 }
+
+.current-player {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 75px;
+}
+
+#overlay {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+
+#modal {
+    position:absolute;
+    background:url(tint20.png) 0 0 repeat;
+    background:rgba(0,0,0,0.2);
+    border-radius:14px;
+    padding:8px;
+}
+
+#content {
+    border-radius:8px;
+    background:#fff;
+    padding:20px;
+}
+
+#close {
+    position:absolute;
+    background:url(close.png) 0 0 no-repeat;
+    width:24px;
+    height:27px;
+    display:block;
+    text-indent:-9999px;
+    top:-7px;
+    right:-7px;
+}
+
+.modal {
+  color: white;
+  border-radius: 3px;
+}
+
+.modal-dialog {
+
+}
+
+.modal-content {
+
+background-color: red;border-radius: 3px;border: 3px solid #fff;}
+
+.modal-header {
+
+}
+
+.modal-title {
+
+text-align: center;}
+
+.modal-body {
+
+text-align: center;}
+
+.modal-footer {
+
+padding-top: 0px;text-align: center;}   
+
+.btn-default {
+
+border-color: #fff;}
+
+.btn-primary {
+
+border: 1px solid #595959;background-color: #595959;}
+
+.btn-primary:hover {
+  background-color: #fff;
+  border: 1px solid #fff;
+  color: #000;
+}
+.btn {
+  margin-top: 20px;
+  border-radius: 3px;
+}
+
+.modal-header > .close {
+
+opacity: .6;text-shadow: none;}
+
+.modal-button-row {
+  text-align: center;
+}
+
+input {
+  color: black;
+  margin-right: 10px;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.modal-body label {
+  padding-right: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,4 +1,5 @@
-var turnCount = 0;
+
+var turnCount = 22;
 var diceRemoved = 0;
 var currentPlayer;
 
@@ -235,21 +236,27 @@ function takeChance(roll){
 }
 
 function rollEm(currentPlayer){
-  $('.die').off('hover').removeClass('jquery-disabled');
-  $('.die').not($('.disabled')).hover(
-    function(){
-      $(this).addClass('jquery-disabled')
-    }, 
-    function(){
-      $(this).removeClass('jquery-disabled');
-    }
+  $('.die')
+    .off('hover')
+    .removeClass('jquery-disabled')
+    .not($('.disabled'))
+    .hover(
+      function(){
+      $(this)
+        .addClass('jquery-disabled')
+      }, 
+      function(){
+      $(this)
+        .removeClass('jquery-disabled');
+      }
   )
   resetScoringOptions();
   if (currentPlayer.status.rolls === 0 || !$('.die').hasClass('disabled')){
     currentPlayer.status.inHand = [];
     var currentRoll = rollTheDice(currentPlayer.status.numOfDice);
     for (var i = 0; i<currentPlayer.status.numOfDice;i++){
-      $($('.die')[i]).html(currentRoll[i].image);
+      $($('.die')[i])
+        .html(currentRoll[i].image);
     }
     currentPlayer.status.inHand = currentPlayer.status.inHand.concat(currentRoll);
     //console.log(currentPlayer.status.inHand);
@@ -257,10 +264,12 @@ function rollEm(currentPlayer){
     var currentRoll = rollTheDice(diceRemoved);
     console.log(diceRemoved);
     for (var i=0; i<currentRoll.length;i++){
-      $($('.disabled')[i]).html(currentRoll[i].image);
+      $($('.disabled')[i])
+        .html(currentRoll[i].image);
     }
     var j = 0;
-    $('.die').each(function(){
+    $('.die')
+      .each(function(){
 
       if ($(this).hasClass('disabled')){
         var atId = $(this).index();
@@ -275,10 +284,11 @@ function rollEm(currentPlayer){
 
 function activateDie(currentPlayer){
   console.log(currentPlayer);
-  $('body').off('click', '.die-image');
-  $('body').on('click', '.die-image', function(e){
-    $(this).parent().hasClass('disabled') ? diceRemoved-- : diceRemoved++;
-    $(this).parent().toggleClass('disabled');
+  $('body')
+    .off('click', '.die-image')
+    .on('click', '.die-image', function(e){
+      $(this).parent().hasClass('disabled') ? diceRemoved-- : diceRemoved++;
+      $(this).parent().toggleClass('disabled');
   });
 }
 
@@ -310,21 +320,33 @@ function updateScoringOptions(currentRoll, currentPlayer){
 
 function updatePoints(hasScore, player, btnClass, buttonText, tableClass, playerScoreObj){
   if (hasScore && playerScoreObj.isActive){
-    $(btnClass).append(buttonText).attr('data', hasScore).removeClass('disabled-score').addClass('active').on('click', function(){
-      $(this).removeClass('active');
-      $(tableClass).text(hasScore);
-      playerScoreObj.isActive = false;
-      playerScoreObj.value = hasScore;
-      nextTurn();
-      $('disabled-score').removeClass('disabled-score');
-      $('.big-button').off('click');
-      $('.big-button').on('click', function(){
-        startTurn();
+    $(btnClass)
+      .append(buttonText)
+      .attr('data', hasScore)
+      .removeClass('disabled-score')
+      .addClass('active')
+      .on('click', function(){
+        $(this)
+          .removeClass('active');
+        $(tableClass)
+          .text(hasScore);
+        playerScoreObj.isActive = false;
+        playerScoreObj.value = hasScore;
+        nextTurn();
+        $('disabled-score')
+          .removeClass('disabled-score');
+      $('.big-button')
+        .off('click')
+        .on('click', function(){
+          startTurn();
       })
     });
   }
   else if (!playerScoreObj.isActive){
-    $(btnClass).addClass('disabled-score').off('click').off('click');
+    $(btnClass)
+      .addClass('disabled-score')
+        .off('click')
+        .off('click');
   }
 }
 
@@ -347,25 +369,37 @@ function resetScoringOptions(){
 }
 
 function nextTurn(){
-  $('.big-button').html('Roll (<span>3</span>)');
-  //var prevPlayer = nextPlayer == player2 ? player1 : player2;
+  $('.big-button')
+    .html('Roll (<span>3</span>)');
   player1.status.inHand = [];
-  $('.die').removeClass('disabled');
-  $('.die').html('');
+  $('.die')
+    .removeClass('disabled')
+    .html('');
   resetScoringOptions();
   turnCount++;
+
   if (turnCount == 26){
     gameOver();
     return;
   }
-  updateScoringOptions([0,0,0,0], turnCount % 2 == 0 ? player1 : player2);
 
-  console.log('next turn');
+  updateScoringOptions([0,0,0,0], turnCount % 2 == 0 ? player1 : player2);
   activateDie(turnCount % 2 == 0 ? player1 : player2);
+
+  function switchPlayer(){
+    $('.current-player')
+      .fadeToggle(200, function(){
+        $('.current-player')
+          .text(turnCount % 2 == 0 ? 'Player 1' : 'Player 2')
+          .fadeToggle(200);
+    });
+  }
+  switchPlayer();
 }
 
 function startTurn(){
-  $('.button').removeClass('disabled-score');
+  $('.button')
+    .removeClass('disabled-score');
   currentPlayer = turnCount % 2 == 0 ? player1 : player2;
   rollEm(currentPlayer);
   updateScoringOptions(convertToValues(currentPlayer), currentPlayer);
@@ -374,13 +408,15 @@ function startTurn(){
     $rollCount.text(Number($rollCount.text()) - 1);
   } 
   else if (Number($rollCount.text()) === 1) {
-    $('.big-button').html('Take points or scratch');
-    $('.die').off('click');
-    $('.big-button').off('click');
+    $('.big-button')
+      .html('Take points or scratch');
+    $('.die, big-button')
+      .off('click');
     setUpScratches(currentPlayer)
   } 
   currentPlayer.status.rolls++;
-  $('.disabled').removeClass('disabled');
+  $('.disabled')
+    .removeClass('disabled');
 }
 
 function setUpScratches(currentPlayer){
@@ -404,15 +440,16 @@ function setUpScratches(currentPlayer){
 function scratchableScores($button, playerScoreObj, tableClass){
   console.log(!$button.hasClass('active'))
   if (!$button.hasClass('active')){
-    $button.off('click')
-    $button.on('click', function(){
-      playerScoreObj.value = 0;
-      playerScoreObj.isActive = false;
-      $(tableClass).text('---');
+    $button
+      .off('click')
+      .on('click', function(){
+        playerScoreObj.value = 0;
+        playerScoreObj.isActive = false;
+        $(tableClass)
+          .text('---');
       nextTurn();
-      $('.big-button').on('click', function(){
-        startTurn();
-      })
+        $('.big-button')
+          .on('click', startTurn())
     })
   }
 }
@@ -437,14 +474,56 @@ function gameOver(){
   }
   $('.total-p1').text(player1Total);
   $('.total-p2').text(player2Total);
+
+  function winner(){ 
+    if (player1Total > player2Total){
+      return 'Player 1 is the winner!'
+    } else if (player2Total > player1Total) { 
+      return 'Player 2 is the winner!'
+    } else {  return 'It\'s a tie!'};
+  }
+  $('.modal-title')
+    .text(winner());
+  $('.modal-body>h3:eq(0)')
+    .text('Player 1 score : ' + player1Total);
+  $('.modal-body>h3:eq(1)')
+    .text('Player 2 score : ' + player2Total);
+  $('#game-over')
+    .modal('show');
 }
 
 $(document).ready(function(){
-  $('.big-button').on('click', function(){
-    startTurn();
-  })
-  activateDie(player1)
+  $('#game-over');
+    .modal({ show: false})
+  $('#enter-names')
+    .modal('show');
+  $('#enter-names>button').on('click', )
+  $('.big-button')
+    .on('click', startTurn());
+  activateDie(player1);
 });
+
+function assignNames(){
+  player1.name = $('#enter-names>input:eq(0)').text() || 'Player 1';
+  player2.name = $('#enter-names>input:eq(1)').text() || 'Player 2'
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
